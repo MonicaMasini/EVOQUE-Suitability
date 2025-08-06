@@ -1,4 +1,3 @@
-
 from flask import Flask, request, jsonify
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
@@ -20,6 +19,20 @@ model.fit(X_train, y_train)
 # Create Flask app
 app = Flask(__name__)
 
+# Homepage route
+@app.route("/", methods=["GET"])
+def home():
+    return """
+    <h1>EVOQUE Suitability Prediction API</h1>
+    <p>Use the <code>/predict</code> endpoint with a POST request and JSON body:</p>
+    <pre>{
+  "S-L dimension (mm)": 46,
+  "A-P Dimension (mm)": 42
+}</pre>
+    <p>Response will include predicted category and probability.</p>
+    """
+
+# Prediction route
 @app.route("/predict", methods=["POST"])
 def predict():
     data = request.get_json()
