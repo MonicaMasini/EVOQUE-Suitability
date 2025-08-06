@@ -3,23 +3,23 @@ from flask import Flask, request, jsonify
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
+import os
 
-# Load the Excel file and prepare the data
+# Load the Excel file
 df = pd.read_excel("Annular_Sizing_Model_Predictions_Updated (1).xlsx", engine="openpyxl")
 
 # Select features and target
 X = df[["S-L dimension (mm)", "A-P Dimension (mm)"]]
 y = df["Target"]
 
-# Split and train the model
+# Train the model
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
 model = RandomForestClassifier(random_state=42)
 model.fit(X_train, y_train)
 
-# Create the Flask app
+# Create Flask app
 app = Flask(__name__)
 
-# Define prediction route
 @app.route("/predict", methods=["POST"])
 def predict():
     data = request.get_json()
@@ -44,13 +44,7 @@ def predict():
         "probability": round(prob, 3)
     })
 
-# Run the app
-if __name__ == "__main__":
-    app.run(debug=True)
-
-import os
-
+# Bind to 0.0.0.0 and use PORT from environment
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
-
