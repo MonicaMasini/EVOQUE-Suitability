@@ -19,31 +19,36 @@ model.fit(X_train, y_train)
 # Create Flask app
 app = Flask(__name__)
 
-# HTML template for the form
+# HTML template with styling
 form_html = """
 <!DOCTYPE html>
 <html>
 <head>
     <title>EVOQUE Suitability Prediction</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        label { font-weight: bold; }
+        .result { color: red; font-weight: bold; font-size: 1.2em; }
+        .probability { font-style: italic; }
+    </style>
 </head>
 <body>
     <h1>EVOQUE Suitability Prediction</h1>
     <form method="POST">
-        <label for="sl">S-L dimension (mm):</label>
+        <label for="sl">S-L Diameter (mm):</label>
         <input type="number" step="any" name="sl" required><br><br>
-        <label for="ap">A-P Dimension (mm):</label>
+        <label for="ap">A-P Diameter (mm):</label>
         <input type="number" step="any" name="ap" required><br><br>
         <input type="submit" value="Predict">
     </form>
     {% if prediction %}
-        <h2>Prediction: {{ prediction }}</h2>
-        <p>Probability: {{ probability }}</p>
+        <div class="result">Prediction: {{ prediction }}</div>
+        <div class="probability">Probability: {{ probability }}% <span>(Probability of Screen Fail)</span></div>
     {% endif %}
 </body>
 </html>
 """
 
-# Homepage with form
 @app.route("/", methods=["GET", "POST"])
 def home():
     prediction = None
@@ -62,11 +67,10 @@ def home():
         else:
             prediction = "Suitable"
 
-        probability = round(prob, 3)
+        probability = round(prob * 100, 1)  # Convert to percentage
 
     return render_template_string(form_html, prediction=prediction, probability=probability)
 
-# API endpoint
 @app.route("/predict", methods=["POST"])
 def predict():
     data = request.get_json()
@@ -88,10 +92,9 @@ def predict():
 
     return jsonify({
         "prediction": prediction,
-        "probability": round(prob, 3)
+        "probability": f"{round(prob * 100, 1)}%"  # Return as percentage
     })
 
-# Bind to 0.0.0.0 and use PORT from environment
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
