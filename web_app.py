@@ -33,24 +33,73 @@ form_html = """
 <head>
     <title>EVOQUE Suitability Prediction</title>
     <style>
-        body { font-family: Arial; margin: 40px; }
-        label { font-weight: bold; }
-        .result { color: red; font-weight: bold; font-size: 1.2em; }
-        .probability { font-style: italic; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f9f9f9;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            background-color: #fff;
+            padding: 25px 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+        }
+        input[type=number] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input[type=submit] {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #0078D4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .result {
+            margin-top: 30px;
+            font-size: 2em;
+            font-weight: bold;
+            color: #c62828;
+            text-align: center;
+        }
+        .probability {
+            font-style: italic;
+            text-align: center;
+            margin-top: 10px;
+            color: #555;
+        }
     </style>
 </head>
 <body>
     <h1>EVOQUE Suitability Prediction</h1>
     <form method="POST">
         <label>S-L Diameter (mm):</label>
-        <input type="number" step="any" name="sl" required><br><br>
+        <input type="number" step="any" name="sl" required>
         <label>A-P Diameter (mm):</label>
-        <input type="number" step="any" name="ap" required><br><br>
+        <input type="number" step="any" name="ap" required>
         <input type="submit" value="Predict">
     </form>
     {% if prediction %}
-        <div class="result">Prediction: {{ prediction }}</div>
-        <div class="probability">Probability: {{ probability }}% <span>(Probability of Screen Fail)</span></div>
+        <div class="result">{{ prediction }}</div>
+        <div class="probability">{{ probability }}% <span>(Probability of Screen Fail)</span></div>
     {% endif %}
 </body>
 </html>
