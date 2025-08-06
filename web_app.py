@@ -5,7 +5,7 @@ from sklearn.model_selection import GridSearchCV, StratifiedKFold
 import os
 
 # Load the Excel file
-df = pd.read_excel("Annular_Sizing_Model_Predictions_Updated (1) 2.xlsx", engine="openpyxl")
+df = pd.read_excel("Annular_Sizing_Model_Predictions_Updated (1).xlsx", engine="openpyxl")
 
 # Prepare features and target
 X = df[["S-L dimension (mm)", "A-P Dimension (mm)"]]
